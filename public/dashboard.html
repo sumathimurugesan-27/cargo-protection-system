@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cargo Protection Dashboard</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    thead {
+      background: #b94cae;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: center;
+    }
+
+    th {
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    tbody tr {
+      background: #fafafa;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+      background: #ffecec;
+    }
+
+    .status {
+      color: #48bbda;
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #777;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚚 Cargo Transport Protection Dashboard</h1>
+
+  <div class="card">
+    <h3>🚨 Unauthorized Driver Alerts</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Vehicle No</th>
+          <th>Expected Driver</th>
+          <th>Detected Driver</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="alertTable">
+        <!-- Data will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    Confidential Asset/Data Protection System © 2026
+  </div>
+
+  <script>
+    fetch("http://localhost:3000/api/driverlogs")
+      .then(res => res.json())
+      .then(data => {
+        const table = document.getElementById("alertTable");
+
+        if (data.length === 0) {
+          table.innerHTML = `
+            <tr>
+              <td colspan="5">No alerts detected</td>
+            </tr>
+          `;
+        }
+
+        data.forEach(log => {
+          const row = `
+            <tr>
+              <td>${log.vehicle}</td>
+              <td>${log.expectedDriver}</td>
+              <td>${log.detectedDriver}</td>
+              <td>${new Date(log.time).toLocaleString()}</td>
+              <td class="status">UNAUTHORIZED</td>
+            </tr>
+          `;
+          table.innerHTML += row;
+        });
+      })
+      .catch(err => {
+        console.error("Error loading data", err);
+      });
+  </script>
+
+</body>
+</html>
